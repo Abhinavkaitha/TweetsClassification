@@ -3,7 +3,7 @@
 
 # # Twitter
 
-# In[2]:
+# In[1]:
 
 
 tweetsTrain=[]
@@ -12,7 +12,7 @@ with open("tweets.train.clean.txt") as file:
         tweetsTrain.append(line)
 
 
-# In[3]:
+# In[2]:
 
 
 tweetsTest=[]
@@ -24,7 +24,7 @@ with open("tweets.test1.clean.txt",encoding="latin-1") as file:
 # I have splitted each line with the first space
 # 
 
-# In[4]:
+# In[3]:
 
 
 import pandas as pd
@@ -40,7 +40,7 @@ for i in range(len(tweetsTest)):
 
 # created a separate list for places and tweets
 
-# In[10]:
+# In[4]:
 
 
 places=[]
@@ -50,7 +50,7 @@ for i in SplittweetsTrain:
     tweets.append(i[1])
 
 
-# In[11]:
+# In[5]:
 
 
 Tplaces=[]
@@ -60,7 +60,7 @@ for i in SplittweetsTest:
     Ttweets.append(i[1])
 
 
-# In[74]:
+# In[6]:
 
 
 trainDic={}
@@ -68,7 +68,7 @@ trainDic["places"]=places
 trainDic["tweets"]=tweets
 
 
-# In[79]:
+# In[7]:
 
 
 testDic={}
@@ -78,7 +78,7 @@ testDic["tweets"]=Ttweets
 
 # Created a list of tweets by splitting them
 
-# In[81]:
+# In[8]:
 
 
 SplitTweets=[]
@@ -86,7 +86,7 @@ for i in trainDic["tweets"]:
     SplitTweets.append(i.split())
 
 
-# In[82]:
+# In[9]:
 
 
 TSplitTweets=[]
@@ -96,7 +96,7 @@ for i in testDic["tweets"]:
 
 # List of stop words
 
-# In[83]:
+# In[10]:
 
 
 stop_words = ['enough', 'eg', 'thatll', 'something', 'often', 'nobody', 'more', 'seems', 're', 'therefore', 'until', 'well', 'wasnt', 'your', 'other', 'throughout', 'whereupon', 'thence', 'z', 'may', 'each', 'now', 'someone', 'become', 'between', 'amoungst', 'what', 'during', 'won', 'just', 'whereafter', 'another', 'go', 'out', 'beside', 'find', 'itself', 'x', 'shouldnt', 'few', 'hasnt', 'still', 'please', 'mightn', 'amount', 'shant', 'both', 'everything', 'themselves', 'youll', 'most', 'therein', 'hadnt', 'ltd', 'over', 'part', 'our', 'whoever', 'sometime', 'next', 'herself', 'r', 'becoming', 'whence', 'f', 'anything', 'g', 'afterwards', 'whatever', 'almost', 'cannot', 'b', 'thereafter', 'isnt', 'didnt', 'd', 'none', 'ourselves', 'so', 'her', 'herein', 'either', 'of', 'anywhere', 'have', 'need', 'and', 'up', 'at', 'amongst', 'she', 'whether', 'already', 'yours', 'wherein', 'mightnt', 'had', 'ma', 'many', 've', 'h', 'was', 'sometimes', 'where', 'except', 'everyone', 'meanwhile', 'y', 'off', 'n', 'havent', "should've", 'his', 'also', 'here', 'once', 'done', 'how', 'mine', 'seem', 'to', 'yourself', 'this', 'together', 'cant', 'above', 'does', 'through', 'ever', 'alone', 'w', 'others', 'in', 'these', 'thru', 'within', 'although', 'he', 'behind', 'us', 'even', 'such', 'there', 'll', 'it', 'than', 'whose', 'against', 'mustnt', 'moreover', 'beyond', 'somehow', 'for', 'couldnt', 'am', 'u', 'one', 'are', 'dont', 'you', 'sincere', 't', 'some', 'describe', 'my', 'since', 'de', 'has', 'without', 'could', 'further', 'before', 'ours', 'shan', 'wasn', 'mostly', 'myself', 'might', 'any', 'not', 'v', 'after', 'them', 'thus', 'wouldnt', 'everywhere', 'their', 'p', 'its', 'would', 'much', 's', 'somewhere', 'all', 'neither', 'then', 'be', 'or', 'own', 'take', 'but', 'too', 'anyway', 'else', 'same', 'whenever', 'while', 'if', 'yet', 'ain', 'did', 'having', 'anyhow', 'besides', 'made', 'nor', 'm', 'only', 'otherwise', 'seemed', 'among', 'that', 'whereas', 'which', 'a', 'however', 'across', 'those', 'less', 'though', 'because', 'wherever', 'i', 'about', 'being', 'rather', 'under', 'when', 'etc', 'four', 'nevertheless', 'the', 'thereby', 'with', 'below', 'c', "hasn't", 'thereupon', 'yourselves', 'him', 'do', 'youd', 'we', 'must', 'hers', 'get', 'perhaps', 'anyone', 'towards', 'doesnt', 'wont', 'always', 'found', 'hereupon', 'indeed', 'keep', 'noone', 'were', 'an', 'nowhere', 'from', 'every', 'nothing', 'no', 'onto', 'put', 'hereby', 'who', 'name', 'is', 'doing', 'k', 'youre', 'whereby', 'never', 'very', 'l', 'theirs', 'why', 'arent', 'again', 'becomes', 'give', 'himself', 'j', 'been', 'see', 'will', 'werent', 'e', 'they', 'youve', 'by', 'q', 'hence', 'on', 'o', 'neednt', 'seeming', 'along', 'can',"city" 'should', 'least', 'toward', 'upon', 'ie', 'into', 'became', 'hereafter', 'me', 'namely', 'down', 'whom', 'as']
@@ -104,7 +104,7 @@ stop_words = ['enough', 'eg', 'thatll', 'something', 'often', 'nobody', 'more', 
 
 # Removong the special charecters and punctuations
 
-# In[84]:
+# In[11]:
 
 
 newSplitTweets=[]
@@ -116,7 +116,7 @@ for i in SplitTweets:
     x=[]
 
 
-# In[85]:
+# In[12]:
 
 
 TnewSplitTweets=[]
@@ -128,13 +128,13 @@ for i in TSplitTweets:
     x=[]
 
 
-# In[86]:
+# In[13]:
 
 
 trainDic["clean"]=newSplitTweets
 
 
-# In[87]:
+# In[14]:
 
 
 testDic["clean"]=TnewSplitTweets
@@ -142,7 +142,7 @@ testDic["clean"]=TnewSplitTweets
 
 # Again, splitting the clean tweets to remove the stop words
 
-# In[88]:
+# In[15]:
 
 
 SplitTweets1=[]
@@ -150,7 +150,7 @@ for i in trainDic["clean"]:
     SplitTweets1.append(i.split())
 
 
-# In[89]:
+# In[16]:
 
 
 TSplitTweets1=[]
@@ -160,7 +160,7 @@ for i in testDic["clean"]:
 
 # Removing the stop words and adding them to df
 
-# In[90]:
+# In[17]:
 
 
 newSplitTweets1=[]
@@ -173,7 +173,7 @@ for i in SplitTweets1:
     x1=[]
 
 
-# In[91]:
+# In[18]:
 
 
 TnewSplitTweets1=[]
@@ -186,13 +186,13 @@ for i in TSplitTweets1:
     x1=[]
 
 
-# In[94]:
+# In[19]:
 
 
 trainDic["clean1"]=newSplitTweets1
 
 
-# In[95]:
+# In[20]:
 
 
 testDic["clean1"]=TnewSplitTweets1
@@ -200,7 +200,7 @@ testDic["clean1"]=TnewSplitTweets1
 
 # creating a list of all the words present in the tweets
 
-# In[96]:
+# In[21]:
 
 
 vocab=""
@@ -208,7 +208,7 @@ for i in trainDic["clean1"]:
     vocab=vocab+" "+(" ".join(i.split()))
 
 
-# In[97]:
+# In[22]:
 
 
 Tvocab=""
@@ -216,37 +216,37 @@ for i in testDic["clean1"]:
     Tvocab=Tvocab+" "+(" ".join(i.split()))
 
 
-# In[98]:
+# In[23]:
 
 
 vocabulary=vocab.split()
 
 
-# In[99]:
+# In[24]:
 
 
 Tvocabulary=Tvocab.split()
 
 
-# In[100]:
+# In[25]:
 
 
 len(vocabulary)
 
 
-# In[101]:
+# In[26]:
 
 
 len(Tvocabulary)
 
 
-# In[102]:
+# In[27]:
 
 
 len(set(vocabulary))
 
 
-# In[103]:
+# In[28]:
 
 
 len(set(Tvocabulary))
@@ -254,7 +254,7 @@ len(set(Tvocabulary))
 
 # Removing strings attachements like ".", "..." etc
 
-# In[104]:
+# In[29]:
 
 
 j=""
@@ -262,7 +262,7 @@ for i in vocabulary:
     j=j+" "+(" ".join(i.split(".")))
 
 
-# In[105]:
+# In[30]:
 
 
 Tj=""
@@ -272,7 +272,7 @@ for i in Tvocabulary:
 
 # Removing the extra spaces
 
-# In[106]:
+# In[31]:
 
 
 k=""
@@ -280,7 +280,7 @@ for i in j.split():
     k=k+" "+i
 
 
-# In[107]:
+# In[32]:
 
 
 Tk=""
@@ -288,43 +288,43 @@ for i in Tj.split():
     Tk=Tk+" "+i
 
 
-# In[108]:
+# In[33]:
 
 
 newVocabulary=k.split()
 
 
-# In[109]:
+# In[34]:
 
 
 TnewVocabulary=Tk.split()
 
 
-# In[110]:
+# In[35]:
 
 
 len(newVocabulary)
 
 
-# In[111]:
+# In[36]:
 
 
 len(TnewVocabulary)
 
 
-# In[112]:
+# In[37]:
 
 
 len(set(newVocabulary))
 
 
-# In[113]:
+# In[38]:
 
 
 len(set(TnewVocabulary))
 
 
-# In[52]:
+# In[39]:
 
 
 vocabDic={}
@@ -332,19 +332,25 @@ for x in set(newVocabulary):
     vocabDic[x]=newVocabulary.count(x)
 
 
-# In[67]:
+# In[40]:
 
 
 len(vocabDic)
 
 
-# In[54]:
+# In[41]:
 
 
 sum(vocabDic.values())
 
 
-# In[148]:
+# In[42]:
+
+
+df=pd.DataFrame(trainDic)
+
+
+# In[43]:
 
 
 def WordCount(place):
@@ -380,19 +386,25 @@ def WordCount(place):
 #  'Toronto,_Ontario',
 #  'Washington,_DC'}
 
-# In[149]:
+# In[44]:
 
 
 Places=set(df["places"])
 
 
-# In[295]:
+# In[46]:
+
+
+Tdf=pd.DataFrame(testDic)
+
+
+# In[48]:
 
 
 TPlaces=set(Tdf["places"])
 
 
-# In[151]:
+# In[49]:
 
 
 MasterDic={}
@@ -400,15 +412,15 @@ for i in Places:
     MasterDic[i]=WordCount(i)
 
 
-# In[152]:
+# In[51]:
 
 
 TMasterDic={}
-for i in TPLaces:
+for i in TPlaces:
     TMasterDic[i]=WordCount(i)
 
 
-# In[193]:
+# In[52]:
 
 
 P={}
@@ -423,13 +435,13 @@ for i in vocabDic:
     P={}
 
 
-# In[250]:
+# In[53]:
 
 
 MasterP
 
 
-# In[204]:
+# In[54]:
 
 
 PlaceP={}
@@ -437,32 +449,32 @@ for i in Places:
     PlaceP[i]=(sum(df["places"]==i))/len(trainDic["places"])
 
 
-# In[205]:
+# In[55]:
 
 
 PlaceP
 
 
-# In[218]:
+# In[56]:
 
 
 testDf=pd.DataFrame(testDic)
 
 
-# In[256]:
+# In[57]:
 
 
 testDf
 
 
-# In[220]:
+# In[58]:
 
 
 for i in range(len(testDf)):
     testDf["clean1"][i]=" ".join(testDf["clean1"][i].split("."))
 
 
-# In[225]:
+# In[59]:
 
 
 RowDic={}
@@ -470,15 +482,16 @@ for i in range(len(testDf)):
     RowDic[i]=testDf["clean1"][i].split()
 
 
-# In[249]:
+# In[60]:
 
 
 RowDic
 
 
-# In[247]:
+# In[62]:
 
 
+RowWordCount={}
 x={}
 for i in range(len(RowDic)):
     for j in set(RowDic[i]):
@@ -487,13 +500,7 @@ for i in range(len(RowDic)):
     x={}
 
 
-# In[259]:
-
-
-MasterP[]
-
-
-# In[288]:
+# In[64]:
 
 
 RowWordDic={}
@@ -505,7 +512,7 @@ for i in RowDic:
     xps={}
 
 
-# In[289]:
+# In[65]:
 
 
 p=1
@@ -520,27 +527,28 @@ for j in range(len(RowDic)):
         p=1
 
 
-# In[344]:
+# In[66]:
 
 
 499*250
 
 
-# In[350]:
+# In[67]:
 
 
 max(RowWordDic[161].values())
 
 
-# In[352]:
+# In[69]:
 
 
+Ans={}
 for i in range(len(RowDic)):
     Ans[i]=0
 Ans
 
 
-# In[355]:
+# In[70]:
 
 
 qwe=[]
@@ -552,7 +560,7 @@ for i in range(len(RowWordDic)):
     qwe=[]
 
 
-# In[361]:
+# In[71]:
 
 
 for i in range(500):
@@ -561,7 +569,7 @@ for i in range(500):
         print(Ans[i])
 
 
-# In[366]:
+# In[72]:
 
 
 Jai=[]
@@ -569,123 +577,4 @@ for i in range(500):
     if i not in [161,243,317,347,367,391]:
         Jai.append(Ans[i][0]==Tplaces[i])
 print(sum(Jai)/500)
-
-
-# In[365]:
-
-
-Ans[1][0]
-
-
-# In[331]:
-
-
-len(RowWordDic)
-
-
-# In[329]:
-
-
-Predict=[]
-for i in range(len(RowWordDic)):
-    for a,b in RowWordDic[i].items():
-        if b==max(RowWordDic[i].values()):
-            Predict.append(a)
-    
-
-
-# In[330]:
-
-
-len(Predict)
-
-
-# In[ ]:
-
-
-for i in Predict:
-    
-
-
-# In[316]:
-
-
-qwerty=[]
-for p in Places:
-    qwerty.append(RowWordDic[0][p])
-max(qwerty)
-
-
-# In[323]:
-
-
-for a,b in RowWordDic[0].items():
-    if b==4.7620745545409633e-32:
-        print(a)
-
-
-# In[305]:
-
-
-Ans=[]
-for i in range(len(RowWordDic)):
-    for p in Places:
-        max(RowWordDic[i][p])
-
-
-# In[298]:
-
-
-Predict
-
-
-# In[265]:
-
-
-Places
-
-
-# In[190]:
-
-
-A=["a","b","c"]
-d={"la":{"a":2,"b":3},"ny":{"a":3,"b":10},"br":{"a":1,"c":10}}
-pp=["la","ny","br"]
-xx={}
-yy={}
-for i in A:
-    for j in pp:
-        a=0
-        try:
-            print(j)
-            xx[j]=(d[j][i]+1)/(sum(d[j].values())+len(A))
-            print(xx)
-        except KeyError:
-            xx[j]=np.finfo(np.float64).eps
-    yy[i]=xx
-    xx={}
-
-
-# In[191]:
-
-
-yy
-
-
-# In[172]:
-
-
-4/16
-
-
-# In[199]:
-
-
-sum(df["places"]=="Los_Angeles,_CA")
-
-
-# In[203]:
-
-
-len(trainDic["places"])
 
