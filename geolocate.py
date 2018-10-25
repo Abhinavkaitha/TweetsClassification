@@ -1,10 +1,5 @@
-
-# coding: utf-8
-
-# In[1]:
-
-
 #!/usr/bin/env python3
+#THIS CODE TAKES 55 SECONDS ON BURROW FOR 32000 TWEETS
 # ---------------------------------------------------------------------------
 # 1 VocabuDic <-- all distinct words present in 32000 tweets
 # 2 Calculated the required P(location) and P(word|location) 
@@ -12,20 +7,22 @@
 #       for each word Wk in Vocabulary
 #               nk <-- number of times a word occurs in a tweet from a particular place
 #               P(Word|location) <-- (nk + 1)/(n + len(VocabDic))
+# 3 p(location/tweet)=p(word1/location)p(word2/location)....p(location)
 # ---------------------------------------------------------------------------
 import pandas as pd
 import re
 import numpy as np
 from collections import Counter
 import heapq
-
+import sys
 
 # In[2]:
-
-
+train=sys.argv[1]
+test=sys.argv[2]
+output=sys.argv[3]
 #storing each line from train file in tweets train
 tweetsTrain=[]
-with open("tweets.train.clean.txt") as file:
+with open(train) as file:
     for line in file:
         tweetsTrain.append(line)
 
@@ -35,7 +32,7 @@ with open("tweets.train.clean.txt") as file:
 
 # storing each line from test file in tweets test
 tweetsTest=[]
-with open("tweets.test1.clean.txt") as file:
+with open(test) as file:
     for line in file:
         tweetsTest.append(line)
 
@@ -120,7 +117,7 @@ for i in testDic["tweets"]:
 # I have collected  these stop words from NLTK package, https://www.ranks.nl/stopwords, from this website. I took the union of both of them
 # and also I have found some words like job,jobs,careerarc,day, latest,amp,click which are in top 5 among all the places
 #So, they wont play any major role in decision making. So I removed them
-stop_words = ["click","amp",'latest', 'day',"careerarc","hiring","job","jobs",'enough',"im",'eg', 'thatll', 'something', 'often', 'nobody', 'more', 'seems', 're', 'therefore', 'until', 'well', 'wasnt', 'your', 'other', 'throughout', 'whereupon', 'thence', 'z', 'may', 'each', 'now', 'someone', 'become', 'between', 'amoungst', 'what', 'during', 'won', 'just', 'whereafter', 'another', 'go', 'out', 'beside', 'find', 'itself', 'x', 'shouldnt', 'few', 'hasnt', 'still', 'please', 'mightn', 'amount', 'shant', 'both', 'everything', 'themselves', 'youll', 'most', 'therein', 'hadnt', 'ltd', 'over', 'part', 'our', 'whoever', 'sometime', 'next', 'herself', 'r', 'becoming', 'whence', 'f', 'anything', 'g', 'afterwards', 'whatever', 'almost', 'cannot', 'b', 'thereafter', 'isnt', 'didnt', 'd', 'none', 'ourselves', 'so', 'her', 'herein', 'either', 'of', 'anywhere', 'have', 'need', 'and', 'up', 'at', 'amongst', 'she', 'whether', 'already', 'yours', 'wherein', 'mightnt', 'had', 'ma', 'many', 've', 'h', 'was', 'sometimes', 'where', 'except', 'everyone', 'meanwhile', 'y', 'off', 'n', 'havent', "should've", 'his', 'also', 'here', 'once', 'done', 'how', 'mine', 'seem', 'to', 'yourself', 'this', 'together', 'cant', 'above', 'does', 'through', 'ever', 'alone', 'w', 'others', 'in', 'these', 'thru', 'within', 'although', 'he', 'behind', 'us', 'even', 'such', 'there', 'll', 'it', 'than', 'whose', 'against', 'mustnt', 'moreover', 'beyond', 'somehow', 'for', 'couldnt', 'am', 'u', 'one', 'are', 'dont', 'you', 'sincere', 't', 'some', 'describe', 'my', 'since', 'de', 'has', 'without', 'could', 'further', 'before', 'ours', 'shan', 'wasn', 'mostly', 'myself', 'might', 'any', 'not', 'v', 'after', 'them', 'thus', 'wouldnt', 'everywhere', 'their', 'p', 'its', 'would', 'much', 's', 'somewhere', 'all', 'neither', 'then', 'be', 'or', 'own', 'take', 'but', 'too', 'anyway', 'else', 'same', 'whenever', 'while', 'if', 'yet', 'ain', 'did', 'having', 'anyhow', 'besides', 'made', 'nor', 'm', 'only', 'otherwise', 'seemed', 'among', 'that', 'whereas', 'which', 'a', 'however', 'across', 'those', 'less', 'though', 'because', 'wherever', 'i', 'about', 'being', 'rather', 'under', 'when', 'etc', 'four', 'nevertheless', 'the', 'thereby', 'with', 'below', 'c', "hasn't", 'thereupon', 'yourselves', 'him', 'do', 'youd', 'we', 'must', 'hers', 'get', 'perhaps', 'anyone', 'towards', 'doesnt', 'wont', 'always', 'found', 'hereupon', 'indeed', 'keep', 'noone', 'were', 'an', 'nowhere', 'from', 'every', 'nothing', 'no', 'onto', 'put', 'hereby', 'who', 'name', 'is', 'doing', 'k', 'youre', 'whereby', 'never', 'very', 'l', 'theirs', 'why', 'arent', 'again', 'becomes', 'give', 'himself', 'j', 'been', 'see', 'will', 'werent', 'e', 'they', 'youve', 'by', 'q', 'hence', 'on', 'o', 'neednt', 'seeming', 'along', 'can',"city" 'should', 'least', 'toward', 'upon', 'ie', 'into', 'became', 'hereafter', 'me', 'namely', 'down', 'whom', 'as']
+stop_words = ["city",'lol','good','st','know','got',"pm",'want',"click","amp",'latest', 'day',"careerarc","hiring","job","jobs",'enough',"im",'eg', 'thatll', 'something', 'often', 'nobody', 'more', 'seems', 're', 'therefore', 'until', 'well', 'wasnt', 'your', 'other', 'throughout', 'whereupon', 'thence', 'z', 'may', 'each', 'now', 'someone', 'become', 'between', 'amoungst', 'what', 'during', 'won', 'just', 'whereafter', 'another', 'go', 'out', 'beside', 'find', 'itself', 'x', 'shouldnt', 'few', 'hasnt', 'still', 'please', 'mightn', 'amount', 'shant', 'both', 'everything', 'themselves', 'youll', 'most', 'therein', 'hadnt', 'ltd', 'over', 'part', 'our', 'whoever', 'sometime', 'next', 'herself', 'r', 'becoming', 'whence', 'f', 'anything', 'g', 'afterwards', 'whatever', 'almost', 'cannot', 'b', 'thereafter', 'isnt', 'didnt', 'd', 'none', 'ourselves', 'so', 'her', 'herein', 'either', 'of', 'anywhere', 'have', 'need', 'and', 'up', 'at', 'amongst', 'she', 'whether', 'already', 'yours', 'wherein', 'mightnt', 'had', 'ma', 'many', 've', 'h', 'was', 'sometimes', 'where', 'except', 'everyone', 'meanwhile', 'y', 'off', 'n', 'havent', "should've", 'his', 'also', 'here', 'once', 'done', 'how', 'mine', 'seem', 'to', 'yourself', 'this', 'together', 'cant', 'above', 'does', 'through', 'ever', 'alone', 'w', 'others', 'in', 'these', 'thru', 'within', 'although', 'he', 'behind', 'us', 'even', 'such', 'there', 'll', 'it', 'than', 'whose', 'against', 'mustnt', 'moreover', 'beyond', 'somehow', 'for', 'couldnt', 'am', 'u', 'one', 'are', 'dont', 'you', 'sincere', 't', 'some', 'describe', 'my', 'since', 'de', 'has', 'without', 'could', 'further', 'before', 'ours', 'shan', 'wasn', 'mostly', 'myself', 'might', 'any', 'not', 'v', 'after', 'them', 'thus', 'wouldnt', 'everywhere', 'their', 'p', 'its', 'would', 'much', 's', 'somewhere', 'all', 'neither', 'then', 'be', 'or', 'own', 'take', 'but', 'too', 'anyway', 'else', 'same', 'whenever', 'while', 'if', 'yet', 'ain', 'did', 'having', 'anyhow', 'besides', 'made', 'nor', 'm', 'only', 'otherwise', 'seemed', 'among', 'that', 'whereas', 'which', 'a', 'however', 'across', 'those', 'less', 'though', 'because', 'wherever', 'i', 'about', 'being', 'rather', 'under', 'when', 'etc', 'four', 'nevertheless', 'the', 'thereby', 'with', 'below', 'c', "hasn't", 'thereupon', 'yourselves', 'him', 'do', 'youd', 'we', 'must', 'hers', 'get', 'perhaps', 'anyone', 'towards', 'doesnt', 'wont', 'always', 'found', 'hereupon', 'indeed', 'keep', 'noone', 'were', 'an', 'nowhere', 'from', 'every', 'nothing', 'no', 'onto', 'put', 'hereby', 'who', 'name', 'is', 'doing', 'k', 'youre', 'whereby', 'never', 'very', 'l', 'theirs', 'why', 'arent', 'again', 'becomes', 'give', 'himself', 'j', 'been', 'see', 'will', 'werent', 'e', 'they', 'youve', 'by', 'q', 'hence', 'on', 'o', 'neednt', 'seeming', 'along', 'can',"city" 'should', 'least', 'toward', 'upon', 'ie', 'into', 'became', 'hereafter', 'me', 'namely', 'down', 'whom', 'as']
 
 
 # Removong the special charecters,punctuations and numbers
@@ -258,8 +255,14 @@ df=pd.DataFrame(trainDic)
 # this function returns a dictionaty with all the clean words and their count present in all the tweets from place
 #similar to the previous operations
 def WordCount(place):
+    i=0
+    index=[]
+    for b in trainDic["places"]:
+        if b==place:
+            index.append(i)
+        i+=1
     PlaceVocab=[]
-    for i in df[df["places"]==place]["clean1"]:
+    for i in list(map(lambda x : trainDic["clean1"][x],index)):
         PlaceVocab.extend(i.split())
     PlaceVocabulary=PlaceVocab
     for i in range(len(PlaceVocabulary)):
@@ -400,7 +403,7 @@ for i in range(len(RowWordDic)):
 # In[40]:
 
 
-with open("output.txt","w") as f:
+with open(output,"w") as f:
     output=[]
     for i in range(len(tweetsTest)):
         tlist=tweetsTest[i].split()
@@ -408,15 +411,6 @@ with open("output.txt","w") as f:
         output.append((" ".join(tlist)))
     f.writelines(["%s\n" % item  for item in output])
 f.close()
-
-
-# In[41]:
-
-
-Jai=[]
-for i in range(500):
-    Jai.append(Ans[i]==Tplaces[i])
-print(sum(Jai)/500)
 
 
 # In[42]:
@@ -444,6 +438,7 @@ for j in Places:
 
 #I DID NOT GET THE WORDS LIKE "click","amp",'latest', 'day',"careerarc","hiring","job","jobs",'enough',"im" BEACUSE I REMOVED
 #THEM TO INCREASE THE EFFICIENCY
+print("Top 5 words in each location")
 for i in Places:
     print(i)
     print(heapq.nlargest(5, top[i], key=top[i].get))
